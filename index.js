@@ -9,14 +9,24 @@ app.set('view engine', 'handlebars')
 
 app.use(express.static('public'))
 
-//converter os dados do formulario em objeto javascript
 app.use(express.urlencoded({
     extended: true
 }))
 
 app.use(express.json())
 
-//rotas
+app.get('/limparTarefas', (requisicao, resposta) => {
+    const sql = 'DELETE FROM tarefas'
+
+    conexao.query(sql, (erro) => {
+        if (erro) {
+            return console.log(erro)
+        }
+
+        resposta.redirect('/')
+    })
+})
+
 app.post('/excluir', (requisicao, resposta) => {
     const id = requisicao.body.id
 
@@ -29,7 +39,7 @@ app.post('/excluir', (requisicao, resposta) => {
         if (erro) {
             return console.log(erro)
         }
-
+        
         resposta.redirect('/')
     })
 })
@@ -90,11 +100,11 @@ app.post('/criar', (requisicao, resposta) => {
 
 app.get('/completas', (requisicao, resposta) => {
     const sql = `
-        SELECT *FROM tarefas
-        WHERE completa = 1
+        SELECT * FROM tarefas
+        WHERE completa = '1'
     `
 
-    conexao.query(sql, (erro,dados) => {
+    conexao.query(sql, (erro, dados) => {
         if (erro) {
             return console.log(erro)
         }
